@@ -1,4 +1,10 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { useEffect } from "react";
+import {
+  Routes,
+  Route,
+  Link,
+  useLocation,
+} from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -32,10 +38,21 @@ function NotFound() {
   );
 }
 
+function ScrollToTop() {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname, search]);
+
+  return null;
+}
+
 function App() {
   return (
     <>
       <Navbar />
+      <ScrollToTop />
 
       <Routes>
         {/* Main pages */}
