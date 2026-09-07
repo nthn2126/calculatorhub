@@ -1,7 +1,18 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import calculators from "../data/calculators";
 import CalculatorIcon from "./CalculatorIcon";
+import {
+  matchesCalculatorSearch,
+  rankCalculatorSearch,
+} from "../utils/calculatorSearch";
 
 function SearchIcon() {
   return (
@@ -31,9 +42,29 @@ function SearchIcon() {
 
 function Search({ onNavigate }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(() => {
+    if (location.pathname !== "/calculators") {
+      return "";
+    }
+
+    return new URLSearchParams(location.search).get("search") || "";
+  });
   const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname !== "/calculators") {
+      return;
+    }
+
+    const urlQuery =
+      new URLSearchParams(location.search).get("search") || "";
+
+    setQuery((current) =>
+      current === urlQuery ? current : urlQuery
+    );
+  }, [location.pathname, location.search]);
 
   const suggestions = useMemo(() => {
     const search = query.trim().toLowerCase();
@@ -43,17 +74,13 @@ function Search({ onNavigate }) {
     }
 
     return calculators
-      .filter((calculator) => {
+      .filter((calculator) =>
+        matchesCalculatorSearch(calculator, search)
+      )
+      .sort((a, b) => {
         return (
-          calculator.name
-            .toLowerCase()
-            .includes(search) ||
-          calculator.description
-            .toLowerCase()
-            .includes(search) ||
-          calculator.category
-            .toLowerCase()
-            .includes(search)
+          rankCalculatorSearch(b, search) -
+          rankCalculatorSearch(a, search)
         );
       })
       .slice(0, 6);

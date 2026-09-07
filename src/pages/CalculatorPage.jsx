@@ -7,6 +7,7 @@ import CalculatorCard from "../components/CalculatorCard";
 import Breadcrumbs from "../components/Breadcrumbs";
 import FAQ from "../components/FAQ";
 import AdSlot from "../components/AdSlot";
+import { getCalculatorGuide } from "../data/calculatorGuides";
 
 function normalizeCategorySlug(category) {
   return category
@@ -38,6 +39,10 @@ function CalculatorPage() {
       )
       .slice(0, 4);
   }, [calculator]);
+
+  const guide = calculator
+    ? getCalculatorGuide(calculator.type)
+    : null;
 
   const faqItems = useMemo(() => {
     if (!calculator) {
@@ -392,6 +397,29 @@ function CalculatorPage() {
 
           </div>
 
+        </section>
+
+        {/* Formula and worked example */}
+
+        <section className="content-section calculator-guide">
+          <div className="content-page-inner">
+            <h2>Formula and Calculation</h2>
+
+            <div className="calculator-guide-grid">
+              <div>
+                <h3>Formula</h3>
+                <p>{guide.formula}</p>
+              </div>
+
+              <div>
+                <h3>Worked example</h3>
+                <p>{guide.example}</p>
+              </div>
+            </div>
+
+            <h3>What the result means</h3>
+            <p>{guide.meaning}</p>
+          </div>
         </section>
 
 
