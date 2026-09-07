@@ -9,6 +9,10 @@ import { Link, useSearchParams } from "react-router-dom";
 import calculators from "../data/calculators";
 import CalculatorCard from "../components/CalculatorCard";
 import AdSlot from "../components/AdSlot";
+import {
+  matchesCalculatorSearch,
+  rankCalculatorSearch,
+} from "../utils/calculatorSearch";
 
 function AllCalculators() {
   const [searchParams, setSearchParams] =
@@ -104,31 +108,22 @@ function AllCalculators() {
     const search =
       searchTerm.trim().toLowerCase();
 
-    return calculators.filter(
-      (calculator) => {
+    return calculators
+      .filter((calculator) => {
         const matchesCategory =
           selectedCategory === "All" ||
-          calculator.category ===
-            selectedCategory;
-
-        const matchesSearch =
-          !search ||
-          calculator.name
-            .toLowerCase()
-            .includes(search) ||
-          calculator.description
-            .toLowerCase()
-            .includes(search) ||
-          calculator.category
-            .toLowerCase()
-            .includes(search);
+          calculator.category === selectedCategory;
 
         return (
           matchesCategory &&
-          matchesSearch
+          matchesCalculatorSearch(calculator, search)
         );
-      }
-    );
+      })
+      .sort(
+        (a, b) =>
+          rankCalculatorSearch(b, search) -
+          rankCalculatorSearch(a, search)
+      );
   }, [
     searchTerm,
     selectedCategory,

@@ -1,6 +1,18 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import calculators from "../data/calculators";
+import CalculatorIcon from "./CalculatorIcon";
+import {
+  matchesCalculatorSearch,
+  rankCalculatorSearch,
+} from "../utils/calculatorSearch";
 
 function SearchIcon() {
   return (
@@ -28,84 +40,31 @@ function SearchIcon() {
   );
 }
 
-function CalculatorMiniIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <rect
-        x="5"
-        y="3"
-        width="14"
-        height="18"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-
-      <rect
-        x="8"
-        y="6"
-        width="8"
-        height="3"
-        rx="0.7"
-        stroke="currentColor"
-        strokeWidth="1.3"
-      />
-
-      <circle
-        cx="9"
-        cy="13"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="12"
-        cy="13"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="15"
-        cy="13"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="9"
-        cy="17"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="12"
-        cy="17"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="15"
-        cy="17"
-        r="0.8"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}
-
 function Search({ onNavigate }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(() => {
+    if (location.pathname !== "/calculators") {
+      return "";
+    }
+
+    return new URLSearchParams(location.search).get("search") || "";
+  });
   const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname !== "/calculators") {
+      return;
+    }
+
+    const urlQuery =
+      new URLSearchParams(location.search).get("search") || "";
+
+    setQuery((current) =>
+      current === urlQuery ? current : urlQuery
+    );
+  }, [location.pathname, location.search]);
 
   const suggestions = useMemo(() => {
     const search = query.trim().toLowerCase();
@@ -115,17 +74,13 @@ function Search({ onNavigate }) {
     }
 
     return calculators
-      .filter((calculator) => {
+      .filter((calculator) =>
+        matchesCalculatorSearch(calculator, search)
+      )
+      .sort((a, b) => {
         return (
-          calculator.name
-            .toLowerCase()
-            .includes(search) ||
-          calculator.description
-            .toLowerCase()
-            .includes(search) ||
-          calculator.category
-            .toLowerCase()
-            .includes(search)
+          rankCalculatorSearch(b, search) -
+          rankCalculatorSearch(a, search)
         );
       })
       .slice(0, 6);
@@ -245,7 +200,9 @@ function Search({ onNavigate }) {
                 }
               >
                 <span className="search-suggestion-icon">
-                  <CalculatorMiniIcon />
+                  <CalculatorIcon
+                    type={calculator.type}
+                  />
                 </span>
 
                 <span className="search-suggestion-content">

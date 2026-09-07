@@ -1,21 +1,25 @@
+import { Link } from "react-router-dom";
+
 function Breadcrumbs({ items = [] }) {
   return (
     <nav className="breadcrumbs" aria-label="Breadcrumb">
-      <a href="/">Home</a>
-
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
 
         return (
-          <span key={`${item.name}-${index}`}>
-            <span className="breadcrumb-separator">/</span>
+          <span className="breadcrumb-item" key={`${item.label}-${index}`}>
+            {index > 0 && (
+              <span className="breadcrumb-separator" aria-hidden="true">
+                /
+              </span>
+            )}
 
-            {isLast || !item.href ? (
+            {isLast || !item.path ? (
               <span className="breadcrumb-current">
-                {item.name}
+                {item.label}
               </span>
             ) : (
-              <a href={item.href}>{item.name}</a>
+              <Link to={item.path}>{item.label}</Link>
             )}
           </span>
         );

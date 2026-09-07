@@ -4,6 +4,14 @@ import calculators from "../data/calculators";
 import CalculatorCard from "../components/CalculatorCard";
 import AdSlot from "../components/AdSlot";
 
+function normalizeCategorySlug(category) {
+  return category
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function CategoryPage() {
   const { category } = useParams();
 
@@ -12,6 +20,8 @@ function CategoryPage() {
     finance: "Finance",
     health: "Health",
     "date-time": "Date & Time",
+    "date-and-time": "Date & Time",
+    "date-time-amp": "Date & Time",
     conversion: "Conversion",
     everyday: "Everyday",
     construction: "Construction",
@@ -20,7 +30,9 @@ function CategoryPage() {
   };
 
   const categoryName =
-    categoryMap[category?.toLowerCase()] || "";
+    categoryMap[normalizeCategorySlug(category || "")] ||
+    categoryMap[category?.toLowerCase()] ||
+    "";
 
   const categoryCalculators = useMemo(() => {
     return calculators.filter(
