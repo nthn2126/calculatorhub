@@ -102,13 +102,17 @@ function Navbar() {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [darkMode, setDarkMode] = useState(() => {
+  const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem(
       "calculatorhub-theme"
     );
 
-    if (savedTheme) {
-      return savedTheme === "dark";
+    if (
+      savedTheme === "light" ||
+      savedTheme === "dark" ||
+      savedTheme === "ocean"
+    ) {
+      return savedTheme;
     }
 
     return (
@@ -116,12 +120,12 @@ function Navbar() {
       window.matchMedia(
         "(prefers-color-scheme: dark)"
       ).matches
-    );
+    )
+      ? "dark"
+      : "light";
   });
 
   useEffect(() => {
-    const theme = darkMode ? "dark" : "light";
-
     document.documentElement.setAttribute(
       "data-theme",
       theme
@@ -131,7 +135,7 @@ function Navbar() {
       "calculatorhub-theme",
       theme
     );
-  }, [darkMode]);
+  }, [theme]);
 
   const isActive = (path) => {
     if (path === "/") {
@@ -145,9 +149,37 @@ function Navbar() {
     setMenuOpen(false);
   };
 
-  const toggleDarkMode = () => {
-    setDarkMode((current) => !current);
+  const cycleTheme = () => {
+    setTheme((current) => {
+      if (current === "light") {
+        return "dark";
+      }
+
+      if (current === "dark") {
+        return "ocean";
+      }
+
+      return "light";
+    });
   };
+
+  const themeDetails = {
+    light: {
+      label: "Light",
+      icon: "☀",
+      next: "dark",
+    },
+    dark: {
+      label: "Dark",
+      icon: "☾",
+      next: "ocean",
+    },
+    ocean: {
+      label: "Ocean",
+      icon: "🌊",
+      next: "light",
+    },
+  }[theme];
 
   return (
     <header className="site-header">
@@ -268,27 +300,19 @@ function Navbar() {
               <button
                 type="button"
                 className="theme-toggle"
-                onClick={toggleDarkMode}
-                aria-label={
-                  darkMode
-                    ? "Switch to light mode"
-                    : "Switch to dark mode"
-                }
-                title={
-                  darkMode
-                    ? "Switch to light mode"
-                    : "Switch to dark mode"
-                }
+                onClick={cycleTheme}
+                aria-label={`Switch to ${themeDetails.next} theme`}
+                title={`Switch to ${themeDetails.next} theme`}
               >
                 <span
                   className="theme-toggle-icon"
                   aria-hidden="true"
                 >
-                  {darkMode ? "☀" : "☾"}
+                  {themeDetails.icon}
                 </span>
 
                 <span className="theme-toggle-text">
-                  {darkMode ? "Light" : "Dark"}
+                  {themeDetails.label}
                 </span>
               </button>
 

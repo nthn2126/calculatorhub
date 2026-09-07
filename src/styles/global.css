@@ -121,6 +121,42 @@
 }
 
 /* =========================================================
+   OCEAN THEME
+   ========================================================= */
+
+[data-theme="ocean"] {
+  --primary: #0e7490;
+  --primary-hover: #155e75;
+  --primary-soft: #cffafe;
+
+  --page-bg: #ecfeff;
+  --surface: #ffffff;
+  --surface-muted: #f0fdfa;
+  --surface-hover: #ccfbf1;
+
+  --text: #164e63;
+  --text-secondary: #365e6d;
+  --text-muted: #56808d;
+
+  --border: #a5f3fc;
+  --border-strong: #67e8f9;
+
+  --success: #047857;
+  --danger: #be123c;
+  --warning: #b45309;
+
+  --shadow-card:
+    0 1px 2px rgba(8, 145, 178, 0.08),
+    0 4px 12px rgba(8, 145, 178, 0.08);
+
+  --shadow-hover:
+    0 8px 24px rgba(8, 145, 178, 0.16);
+
+  --shadow-calculator:
+    0 12px 32px rgba(8, 145, 178, 0.18);
+}
+
+/* =========================================================
    RESET
    ========================================================= */
 
@@ -883,6 +919,13 @@ p {
 [data-theme="dark"] .calculator-page::before,
 [data-theme="dark"] .content-page::before {
   opacity: 0.025;
+}
+
+[data-theme="ocean"] .home-page::before,
+[data-theme="ocean"] .category-page::before,
+[data-theme="ocean"] .calculator-page::before,
+[data-theme="ocean"] .content-page::before {
+  opacity: 0.03;
 }
 
 .home-page > *,
