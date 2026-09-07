@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import calculators from "../data/calculators";
+import CalculatorIcon from "./CalculatorIcon";
 
 function SearchIcon() {
   return (
@@ -23,79 +24,6 @@ function SearchIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function CalculatorMiniIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <rect
-        x="5"
-        y="3"
-        width="14"
-        height="18"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-
-      <rect
-        x="8"
-        y="6"
-        width="8"
-        height="3"
-        rx="0.7"
-        stroke="currentColor"
-        strokeWidth="1.3"
-      />
-
-      <circle
-        cx="9"
-        cy="13"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="12"
-        cy="13"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="15"
-        cy="13"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="9"
-        cy="17"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="12"
-        cy="17"
-        r="0.8"
-        fill="currentColor"
-      />
-
-      <circle
-        cx="15"
-        cy="17"
-        r="0.8"
-        fill="currentColor"
       />
     </svg>
   );
@@ -245,7 +173,9 @@ function Search({ onNavigate }) {
                 }
               >
                 <span className="search-suggestion-icon">
-                  <CalculatorMiniIcon />
+                  <CalculatorIcon
+                    type={calculator.type}
+                  />
                 </span>
 
                 <span className="search-suggestion-content">
