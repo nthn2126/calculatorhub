@@ -8,6 +8,14 @@ import Breadcrumbs from "../components/Breadcrumbs";
 import FAQ from "../components/FAQ";
 import AdSlot from "../components/AdSlot";
 
+function normalizeCategorySlug(category) {
+  return category
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function CalculatorPage() {
   const { slug } = useParams();
 
@@ -313,9 +321,7 @@ function CalculatorPage() {
             },
             {
               label: calculator.category,
-              path: `/category/${calculator.category
-                .toLowerCase()
-                .replace(/\s+/g, "-")}`,
+              path: `/category/${normalizeCategorySlug(calculator.category)}`,
             },
             {
               label: calculator.name,

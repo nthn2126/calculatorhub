@@ -4,6 +4,14 @@ import calculators from "../data/calculators";
 import CalculatorCard from "../components/CalculatorCard";
 import AdSlot from "../components/AdSlot";
 
+function normalizeCategorySlug(category) {
+  return category
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function Home() {
   const [search, setSearch] = useState("");
 
@@ -185,9 +193,7 @@ function Home() {
             ].map(([name, icon, description]) => (
               <Link
                 key={name}
-                to={`/category/${name
-                  .toLowerCase()
-                  .replace(/\s+/g, "-")}`}
+                to={`/category/${normalizeCategorySlug(name)}`}
                 className="category-card"
               >
                 <span className="category-icon">
